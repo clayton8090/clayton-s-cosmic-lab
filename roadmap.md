@@ -3,4 +3,4 @@
 - [x] Filterable lab
 - [x] Threaded browser-saved companion
 - [x] Secure admin content editor
-- [ ] Verify mobile and desktop rendering
+- [x] Verify mobile and desktop rendering

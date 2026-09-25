@@ -1,24 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, ArrowUpRight, Github, Mail, MoveUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getProjects, getLabItems } from "@/lib/portfolio";
+import { ProjectCard, LabCard, SectionLabel } from "@/components/portfolio-ui";
+import hero from "@/assets/cosmic-hero.jpg";
+export const Route = createFileRoute("/")({ head:()=>({meta:[{title:"Clayton Aylor — Developer & Curious Builder"},{name:"description",content:"Clayton Aylor builds web apps, experiments with ideas, and shares the things he finds interesting."},{property:"og:title",content:"Clayton Aylor — Developer & Curious Builder"},{property:"og:description",content:"Web apps, thoughtful experiments, and the ideas behind them."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}), component: Home });
+function Home(){const {data:projects=[]}=useQuery({queryKey:["projects"],queryFn:getProjects});const {data:lab=[]}=useQuery({queryKey:["lab"],queryFn:getLabItems});return <main>
+<section className="relative overflow-hidden min-h-[570px] md:min-h-[650px] flex items-center border-b border-border"><img src={hero} alt="Stars and a luminous cyan nebula" width={1600} height={1008} className="absolute inset-0 w-full h-full object-cover object-center"/><div className="absolute inset-0 bg-background/30"/><div className="site-shell relative z-10 w-full pt-16 pb-20"><div className="max-w-[750px]"><div className="inline-flex items-center gap-2.5 border border-primary/30 bg-background/50 backdrop-blur-sm px-3 py-2 text-xs text-primary rounded-sm"><span className="relative flex size-2"><span className="absolute inset-0 bg-primary rounded-full animate-ping opacity-40"/><span className="relative size-2 bg-primary rounded-full"/></span>Open to interesting conversations</div><p className="font-mono text-xs uppercase tracking-[.2em] text-primary mt-12 mb-5">Developer / Builder / Curious human</p><h1 className="font-display text-[clamp(3.2rem,7vw,6.75rem)] leading-[1.03] font-semibold text-foreground">Hey, I’m Clayton<span className="text-primary">.</span></h1><p className="text-lg md:text-xl leading-relaxed text-foreground/75 max-w-xl mt-7">I build web apps, tinker with ideas, and share things I think are cool. This is my little corner of the internet.</p><div className="flex flex-wrap items-center gap-3 mt-9"><Button asChild className="rounded-sm h-11 px-5"><a href="#work">Explore my work <ArrowUpRight size={16}/></a></Button><Button asChild variant="outline" className="rounded-sm h-11 px-5 bg-background/30"><a href="mailto:hello@claytonaylor.com">Get in touch <Mail size={16}/></a></Button><a href="https://github.com/" aria-label="GitHub" target="_blank" rel="noopener noreferrer" className="ml-2 text-muted-foreground hover:text-primary"><Github size={20}/></a></div></div></div><div className="absolute bottom-5 right-6 text-[10px] text-foreground/40 font-mono tracking-widest hidden md:block">SCROLL TO EXPLORE ↓</div></section>
+<section id="work" className="site-shell pt-20 md:pt-28"><SectionLabel count={`0${projects.filter(p=>p.featured).length} PROJECTS`}>Selected work</SectionLabel><div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mt-6 mb-10"><h2 className="font-display text-4xl md:text-5xl font-medium max-w-xl">Things I’ve <span className="text-primary">built.</span></h2><p className="text-muted-foreground max-w-sm leading-relaxed text-sm">A few projects, the ideas behind them, and a look under the hood.</p></div>{projects.length ? <div className="grid md:grid-cols-2 gap-5">{projects.filter(p=>p.featured).map((p,i)=><ProjectCard key={p.id} project={p} index={i}/>)}</div>:<div className="border border-border p-8 text-muted-foreground">Projects are on their way.</div>}</section>
+<section className="mt-24 md:mt-32 py-20 md:py-24 border-y border-border bg-card/30"><div className="site-shell"><SectionLabel count="THE SIDE QUESTS">Currently tinkering</SectionLabel><div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mt-6 mb-10"><div><h2 className="font-display text-4xl md:text-5xl font-medium">The little <span className="text-primary">lab.</span></h2><p className="text-muted-foreground mt-5 max-w-lg leading-relaxed">Not every idea needs to be a big thing. Sometimes the fun is just seeing what happens.</p></div><Button asChild variant="outline" className="rounded-sm w-fit"><Link to="/lab">Explore the lab <ArrowRight size={16}/></Link></Button></div><div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">{lab.slice(0,4).map((item,i)=><LabCard key={item.id} item={item} index={i}/>)}</div></div></section>
+<section className="site-shell py-24 md:py-32 flex flex-col md:flex-row gap-8 md:items-center md:justify-between"><div><SectionLabel>Let’s connect</SectionLabel><h2 className="font-display text-4xl md:text-5xl mt-5">Have an idea? <span className="text-primary">Let’s talk.</span></h2><p className="text-muted-foreground mt-4">Good conversations tend to lead somewhere interesting.</p></div><Button asChild className="rounded-sm w-fit h-12 px-6"><a href="mailto:hello@claytonaylor.com">Say hello <MoveUpRight size={17}/></a></Button></section>
+</main>}

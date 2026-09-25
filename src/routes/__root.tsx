@@ -1,126 +1,19 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  Outlet,
-  Link,
-  createRootRouteWithContext,
-  useRouter,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
-
+import { Outlet, Link, createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import { useState, type ReactNode } from "react";
+import { Github, ArrowUpRight, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ChatWidget } from "@/components/chat-widget";
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-
-function NotFoundComponent() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
-  const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-    ],
-  }),
-  shellComponent: RootShell,
-  component: RootComponent,
-  notFoundComponent: NotFoundComponent,
-  errorComponent: ErrorComponent,
+ head: () => ({ meta: [{ charSet:"utf-8" }, { name:"viewport", content:"width=device-width, initial-scale=1" }], links: [{ rel:"stylesheet",href:appCss }, { rel:"preconnect",href:"https://fonts.googleapis.com" }, { rel:"preconnect",href:"https://fonts.gstatic.com",crossOrigin:"anonymous" }, { rel:"stylesheet",href:"https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" }, { rel:"icon",href:"/favicon.svg",type:"image/svg+xml" }] }),
+ shellComponent: ({children}:{children:ReactNode}) => <html lang="en"><head><HeadContent/></head><body>{children}<Scripts/></body></html>,
+ component: Root,
+ notFoundComponent: () => <main className="site-shell min-h-[70vh] flex flex-col justify-center"><h1 className="font-display text-6xl">Lost in space.</h1><p className="text-muted-foreground mt-4">That page isn’t here.</p><Button asChild className="w-fit mt-8"><Link to="/">Head home</Link></Button></main>,
 });
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
-function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-    </QueryClientProvider>
-  );
-}
+function Root(){ const {queryClient}=Route.useRouteContext(); const [menu,setMenu]=useState(false); return <QueryClientProvider client={queryClient}>
+<header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-xl"><div className="site-shell h-[72px] flex items-center justify-between gap-6"><Link to="/" className="font-display font-bold text-xl tracking-normal flex items-center gap-2"><span className="text-primary text-2xl">✳</span> clayton<span className="text-primary">.</span></Link><nav className="hidden md:flex items-center gap-9 text-sm text-muted-foreground"><Link to="/" activeProps={{className:"text-foreground"}} className="hover:text-foreground">Home</Link><Link to="/lab" activeProps={{className:"text-foreground"}} className="hover:text-foreground">The Lab</Link><a href="mailto:hello@claytonaylor.com" className="hover:text-foreground">Contact</a></nav><div className="hidden md:flex items-center gap-5"><a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-muted-foreground hover:text-primary"><Github size={19}/></a><Button asChild size="sm" variant="outline" className="rounded-sm"><a href="mailto:hello@claytonaylor.com">Say hello <ArrowUpRight size={14}/></a></Button></div><Button variant="ghost" size="icon" className="md:hidden" aria-label="Toggle menu" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</Button></div>{menu&&<nav className="md:hidden site-shell pb-5 flex flex-col gap-4 text-sm"><Link to="/" onClick={()=>setMenu(false)}>Home</Link><Link to="/lab" onClick={()=>setMenu(false)}>The Lab</Link><a href="mailto:hello@claytonaylor.com">Contact</a></nav>}</header>
+<Outlet/>
+<footer className="border-t border-border py-12 mt-24"><div className="site-shell flex flex-col md:flex-row justify-between gap-6 text-sm text-muted-foreground"><div><span className="font-display text-foreground font-semibold">clayton<span className="text-primary">.</span></span><p className="mt-2">Building useful things, one idea at a time.</p></div><div className="flex items-center gap-6"><Link to="/lab" className="hover:text-primary">The Lab</Link><a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="hover:text-primary">GitHub</a><a href="mailto:hello@claytonaylor.com" className="hover:text-primary">Email</a><Link to="/admin" className="hover:text-primary">Admin</Link></div></div></footer><ChatWidget/>
+</QueryClientProvider> }

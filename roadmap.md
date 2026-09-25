@@ -1,6 +1,6 @@
-- [ ] Home with featured editable projects and lab preview
-- [ ] Project case study and interactive architecture
-- [ ] Filterable lab
-- [ ] Threaded browser-saved companion
-- [ ] Secure admin content editor
+- [x] Home with featured editable projects and lab preview
+- [x] Project case study and interactive architecture
+- [x] Filterable lab
+- [x] Threaded browser-saved companion
+- [x] Secure admin content editor
 - [ ] Verify mobile and desktop rendering

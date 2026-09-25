@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LabRouteImport } from './routes/lab'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ChatThreadIdRouteImport } from './routes/chat.$threadId'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatThreadIdRoute = ChatThreadIdRouteImport.update({
+  id: '/chat/$threadId',
+  path: '/chat/$threadId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/projects/$slug',
   path: '/projects/$slug',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/lab': typeof LabRoute
   '/api/chat': typeof ApiChatRoute
+  '/chat/$threadId': typeof ChatThreadIdRoute
   '/projects/$slug': typeof ProjectsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/lab': typeof LabRoute
   '/api/chat': typeof ApiChatRoute
+  '/chat/$threadId': typeof ChatThreadIdRoute
   '/projects/$slug': typeof ProjectsSlugRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/lab': typeof LabRoute
   '/api/chat': typeof ApiChatRoute
+  '/chat/$threadId': typeof ChatThreadIdRoute
   '/projects/$slug': typeof ProjectsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/lab' | '/api/chat' | '/projects/$slug'
+  fullPaths: '/' | '/lab' | '/api/chat' | '/chat/$threadId' | '/projects/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/lab' | '/api/chat' | '/projects/$slug'
-  id: '__root__' | '/' | '/lab' | '/api/chat' | '/projects/$slug'
+  to: '/' | '/lab' | '/api/chat' | '/chat/$threadId' | '/projects/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/lab'
+    | '/api/chat'
+    | '/chat/$threadId'
+    | '/projects/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LabRoute: typeof LabRoute
   ApiChatRoute: typeof ApiChatRoute
+  ChatThreadIdRoute: typeof ChatThreadIdRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
 }
 
@@ -92,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat/$threadId': {
+      id: '/chat/$threadId'
+      path: '/chat/$threadId'
+      fullPath: '/chat/$threadId'
+      preLoaderRoute: typeof ChatThreadIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/$slug': {
       id: '/projects/$slug'
       path: '/projects/$slug'
@@ -106,6 +129,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LabRoute: LabRoute,
   ApiChatRoute: ApiChatRoute,
+  ChatThreadIdRoute: ChatThreadIdRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
 }
 export const routeTree = rootRouteImport

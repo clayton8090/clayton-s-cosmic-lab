@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as LabRouteImport } from './routes/lab'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ChatThreadIdRouteImport } from './routes/chat.$threadId'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LabRoute = LabRouteImport.update({
@@ -50,6 +56,7 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
   '/lab': typeof LabRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$threadId': typeof ChatThreadIdRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
   '/lab': typeof LabRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$threadId': typeof ChatThreadIdRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
   '/lab': typeof LabRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$threadId': typeof ChatThreadIdRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/contact'
     | '/lab'
     | '/api/chat'
     | '/chat/$threadId'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/contact'
     | '/lab'
     | '/api/chat'
     | '/chat/$threadId'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/contact'
     | '/lab'
     | '/api/chat'
     | '/chat/$threadId'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  ContactRoute: typeof ContactRoute
   LabRoute: typeof LabRoute
   ApiChatRoute: typeof ApiChatRoute
   ChatThreadIdRoute: typeof ChatThreadIdRoute
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lab': {
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  ContactRoute: ContactRoute,
   LabRoute: LabRoute,
   ApiChatRoute: ApiChatRoute,
   ChatThreadIdRoute: ChatThreadIdRoute,

@@ -21,6 +21,7 @@ function ChatContent({thread,onSave}:{thread:Thread;onSave:(messages:UIMessage[]
 export function ChatWidget(){const navigate=useNavigate();const pathname=useRouterState({select:s=>s.location.pathname});const threadId=pathname.startsWith("/chat/")?decodeURIComponent(pathname.slice(6)):null;const [open,setOpen]=useState(false);const [threads,setThreads]=useState<Thread[]>([]);const [ready,setReady]=useState(false);const [list,setList]=useState(false);
  useEffect(()=>{let items=loadThreads();if(!items.length){items=[{id:crypto.randomUUID(),title:"New conversation",updatedAt:Date.now(),messages:[]}];saveThreads(items)}setThreads(items);setReady(true)},[]);
  useEffect(()=>{if(threadId)setOpen(true)},[threadId]);
+ useEffect(()=>{const open=()=>show();window.addEventListener("open-clayton-chat",open);return()=>window.removeEventListener("open-clayton-chat",open)});
   useEffect(()=>{if(open&&ready&&!threadId){const first=threads[0];if(first)navigate({to:"/chat/$threadId",params:{threadId:first.id}})}},[open,ready,threadId,threads,navigate]);
  const active=threads.find(t=>t.id===threadId);const create=()=>{const t={id:crypto.randomUUID(),title:"New conversation",updatedAt:Date.now(),messages:[]};setThreads(prev=>{const next=[t,...prev];saveThreads(next);return next});setList(false);setOpen(true);navigate({to:"/chat/$threadId",params:{threadId:t.id}})};
  const select=(id:string)=>{setList(false);navigate({to:"/chat/$threadId",params:{threadId:id}})};
